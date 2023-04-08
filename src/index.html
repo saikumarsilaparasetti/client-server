@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <form action="">
+      <label><b> Enter the json data to be sent to server</b> </label>
+      <br />
+      <textarea name="message" class="message"></textarea>
+      <button type="button" onclick="sendMessage()">Submit request</button>
+    </form>
+
+    <br /><br />
+
+    <h3>Status</h3>
+    <div class="status"></div>
+
+    <h3>Heart beat</h3>
+    <div class="heart-beat"></div>
+
+    <script src="/socket.io/socket.io.js"></script>
+
+    <script>
+      var io = io();
+      const sendMessage = (event) => {
+        const message = document.querySelector(".message").value;
+
+        io.emit("send-message", message);
+      };
+      io.on("heart-beat", (data) => {
+        let existingData =
+          document.querySelector(".heart-beat").textContent + "\n" || "";
+        document.querySelector(".heart-beat").innerHTML =
+          existingData + JSON.stringify(data);
+      });
+      io.on("send-message", (data) => {
+        let exitingData = document.querySelector(".status").textContent + "\n";
+        document.querySelector(".status").innerHTML =
+          exitingData + JSON.stringify(data);
+      });
+    </script>
+  </body>
+</html>
